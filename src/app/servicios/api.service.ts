@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { LoginI } from '../modelos/login.interface';
-import { ResponseI } from '../modelos/response.interface';
+import { LoginInterface, LoginResponseInterface } from '../modelos/login.interface';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map, windowWhen } from 'rxjs/operators';
 
 
 @Injectable({
@@ -10,15 +10,44 @@ import { Observable } from 'rxjs';
 })
 export class ApiService {
 
-  url: string = "https://atid-auth-test.herokuapp.com/api";
+  url: string = "https://atid-auth-test.herokuapp.com/api/";
 
   constructor(private http: HttpClient) { }
 
   /*
   * Se realiza la petición POST al Endpoint
   */
-  loginByEmail(form: LoginI): Observable<ResponseI> {
-    let authentication = this.url + "/users/auth";
-    return this.http.post<ResponseI>(authentication, form);
+  login(authData: LoginInterface): Observable<LoginResponseInterface | void> {
+    let auth = this.url + "users/auth";
+    return this.http
+      .post<LoginResponseInterface>(auth, authData)
+      .pipe(
+        map((res: LoginResponseInterface) => {
+          console.log('Res->', res);
+
+          // saveToken()
+        }),
+        catchError((err) => this.handlerError(err))
+      );
   }
+
+  /*
+  * Función para cerrar la sesión
+  */
+  logout(): void { }
+  private readToken(): void { }
+  private saveToken(): void { }
+
+  private handlerError(err: any): Observable<never> {
+    let errorMessage = 'An error occurred with the request';
+    if (err) {
+      errorMessage = `Error: code ${err.message}`;
+    }
+    window.alert(errorMessage);
+    return throwError(errorMessage);
+  }
+
+
 }
+
+
