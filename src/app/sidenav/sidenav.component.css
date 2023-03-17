@@ -88,11 +88,6 @@
   color: #000;
 }
 
-.sidenav-nav-item,
-.sidenav-nav-link {
-  color: #fff;
-}
-
 .sidenav-link-icon {
   font-size: 22px;
   width: 2rem;
@@ -107,9 +102,5 @@
 
 .active-link {
   background: #fff;
-}
-
-.sidenav-link-icon,
-.sidenav-link-text {
   color: #000;
 }
